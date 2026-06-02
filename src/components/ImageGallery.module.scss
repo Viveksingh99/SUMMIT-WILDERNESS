@@ -1,0 +1,352 @@
+@use '../styles/variables' as *;
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border);
+  background-color: #ffffff;
+  cursor: zoom-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+
+  @media (max-width: $breakpoint-mobile) {
+    display: none; // Hidden on mobile, scrollable container used instead
+  }
+
+  .mainImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 24px;
+    transition: transform 0.1s ease-out;
+  }
+
+  &:hover {
+    .zoomIndicator {
+      opacity: 0;
+    }
+    .navButton {
+      opacity: 1;
+    }
+  }
+}
+
+.zoomIndicator {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity $transition-fast;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-bg-panel);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity $transition-fast, background-color $transition-fast, transform $transition-fast;
+  z-index: 10;
+  box-shadow: var(--color-shadow);
+
+  &:hover {
+    background-color: var(--color-accent);
+    color: #ffffff;
+    border-color: var(--color-accent);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &.prev {
+    left: 16px;
+  }
+
+  &.next {
+    right: 16px;
+  }
+}
+
+/* Mobile swipe-gallery stylings */
+.mobileGallery {
+  display: none;
+  width: 100%;
+  height: 380px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none; // Firefox
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  background-color: #ffffff;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome/Safari
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    display: flex;
+  }
+
+  .mobileSlide {
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+}
+
+.mobileZoomBadge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.dotsIndicator {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+
+  @media (max-width: $breakpoint-mobile) {
+    display: flex;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-border);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color $transition-fast, transform $transition-fast;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  .activeDot {
+    background-color: var(--color-accent);
+    transform: scale(1.2);
+  }
+}
+
+/* Thumbnail Grid Row */
+.thumbnailRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0 4px 4px;
+    // Let thumbnails scroll sideways if they exceed space
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .thumbnailButton {
+    flex: 0 0 76px;
+    height: 76px;
+    border-radius: $radius-md;
+    border: 1px solid var(--color-border);
+    background-color: #ffffff;
+    padding: 6px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color $transition-fast, transform $transition-fast;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    &:hover {
+      border-color: var(--color-text-secondary);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .activeThumbnail {
+    border-color: var(--color-accent);
+    border-width: 2px;
+    box-shadow: 0 0 0 2px var(--color-accent-bg);
+  }
+}
+
+/* Fullscreen Lightbox Modal */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(10, 11, 13, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+  animation: fadeIn $transition-fast;
+}
+
+.closeLightbox {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  transition: background-color $transition-fast;
+  z-index: 1010;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.lightboxContent {
+  position: relative;
+  max-width: 90%;
+  max-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+
+  img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: $radius-md;
+    background-color: #ffffff;
+    padding: 16px;
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+.lightboxNav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color $transition-fast, transform $transition-fast;
+  z-index: 1010;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &.lightboxPrev {
+    left: 24px;
+    @media (max-width: $breakpoint-mobile) {
+      left: 12px;
+    }
+  }
+
+  &.lightboxNext {
+    right: 24px;
+    @media (max-width: $breakpoint-mobile) {
+      right: 12px;
+    }
+  }
+}
+
+.lightboxCounter {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

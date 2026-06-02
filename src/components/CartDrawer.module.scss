@@ -1,0 +1,355 @@
+@use '../styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity $transition-normal;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  width: 100%;
+  max-width: 460px;
+  height: 100%;
+  background-color: var(--color-bg-panel);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--color-shadow);
+  transform: translateX(100%);
+  transition: transform $transition-slow;
+  
+  @media (max-width: $breakpoint-mobile) {
+    max-width: 100%;
+  }
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.header {
+  padding: 24px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .headerTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-text-primary);
+
+    h2 {
+      font-family: $font-family-heading;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    transition: background-color $transition-fast, color $transition-fast;
+
+    &:hover {
+      background-color: var(--color-border);
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.emptyCart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  text-align: center;
+  padding: 0 16px;
+
+  .emptyIconContainer {
+    width: 96px;
+    height: 96px;
+    background-color: var(--color-accent-bg);
+    color: var(--color-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .emptyIcon {
+    animation: pulse 2s infinite;
+  }
+
+  h3 {
+    font-family: $font-family-heading;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--color-text-primary);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    margin: 0 0 32px;
+    max-width: 280px;
+  }
+
+  .shopButton {
+    background-color: var(--color-text-primary);
+    color: var(--color-bg);
+    border: none;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: opacity $transition-fast, transform $transition-fast;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.cartList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cartItem {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .itemImage {
+    width: 80px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: $radius-sm;
+    background-color: #ffffff;
+    padding: 4px;
+    border: 1px solid var(--color-border);
+  }
+}
+
+.itemDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .itemBrand {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+  }
+
+  .itemTitle {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+
+  .itemVariants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+
+    .itemVariant {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .colorIndicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1px solid var(--color-border);
+    }
+  }
+}
+
+.itemActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+
+  .qtyPicker {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+    overflow: hidden;
+
+    button {
+      background: none;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color $transition-fast, color $transition-fast;
+
+      &:hover:not(:disabled) {
+        background-color: var(--color-border);
+        color: var(--color-text-primary);
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+    }
+
+    .qtyValue {
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 24px;
+      text-align: center;
+      color: var(--color-text-primary);
+    }
+  }
+
+  .removeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    padding: 6px;
+    border-radius: $radius-sm;
+    display: flex;
+    transition: color $transition-fast, background-color $transition-fast;
+
+    &:hover {
+      color: var(--color-sale);
+      background-color: rgba(220, 38, 38, 0.08);
+    }
+  }
+}
+
+.itemPrice {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: right;
+  min-width: 60px;
+}
+
+.footer {
+  padding: 24px;
+  border-top: 1px solid var(--color-border);
+  background-color: rgba(var(--color-bg-panel), 0.95);
+
+  .subtotalRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+
+    .subtotalValue {
+      font-family: $font-family-heading;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+  }
+
+  .footerText {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 0 0 20px;
+  }
+
+  .checkoutButton {
+    width: 100%;
+    background-color: var(--color-accent);
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: background-color $transition-fast, transform $transition-fast;
+    box-shadow: 0 4px 12px rgba(46, 139, 87, 0.2);
+
+    &:hover {
+      background-color: var(--color-accent-hover);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
