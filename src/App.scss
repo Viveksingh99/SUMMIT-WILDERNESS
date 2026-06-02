@@ -20,7 +20,6 @@
   }
 }
 
-/* Breadcrumbs navigation */
 .breadcrumbs {
   display: flex;
   align-items: center;
@@ -59,7 +58,6 @@
   }
 }
 
-/* Two-column layout grid */
 .pdp-grid {
   display: grid;
   grid-template-columns: 55fr 45fr;
@@ -88,7 +86,6 @@
   width: 100%;
 }
 
-/* Skeleton Loading Screens */
 .skeleton-layout {
   display: flex;
   flex-direction: column;
@@ -194,7 +191,6 @@
   }
 }
 
-/* Pulse Animation for Skeletons */
 .pulse-animation {
   animation: pulse-bg 1.5s infinite ease-in-out;
 }
@@ -211,7 +207,6 @@
   }
 }
 
-/* Error boundary views */
 .error-layout {
   display: flex;
   align-items: center;
@@ -278,7 +273,6 @@
   }
 }
 
-/* Demo Navigation styles */
 .demo-navigation {
   margin-top: 64px;
   background-color: var(--color-bg-panel);
@@ -330,7 +324,6 @@
   }
 }
 
-/* Footer layout */
 .footer-credits {
   border-top: 1px solid var(--color-border);
   background-color: var(--color-bg-panel);

@@ -15,11 +15,9 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Selected variant state
   const [selectedColorId, setSelectedColorId] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
 
-  // 1. Fetch Product ID from URL search parameters (default to product 1)
   const getProductIdFromURL = (): number => {
     const params = new URLSearchParams(window.location.search);
     const idParam = params.get('productId') || params.get('id');
@@ -29,7 +27,6 @@ function AppContent() {
 
   const productId = getProductIdFromURL();
 
-  // 2. Fetch product data from Fake Store API
   const fetchProductData = async () => {
     setLoading(true);
     setError(null);
@@ -43,21 +40,17 @@ function AppContent() {
         throw new Error('Product not found in the catalog.');
       }
       
-      // Enrich the generic product with premium outdoors attributes
       const enriched = enrichProduct(data);
       setProduct(enriched);
       
-      // 3. Rehydrate variant selection from URL or fall back to defaults
       const params = new URLSearchParams(window.location.search);
       const urlColor = params.get('color');
       const urlSize = params.get('size');
       
-      // Check if URL color exists in the fetched product colors
       const matchedColor = enriched.colors.find(c => c.id === urlColor || c.name.toLowerCase() === urlColor?.toLowerCase());
       const defaultColorId = matchedColor ? matchedColor.id : enriched.colors[0].id;
       setSelectedColorId(defaultColorId);
 
-      // Check if URL size exists and is not sold out
       const matchedSize = enriched.sizes.find(s => s.size.toLowerCase() === urlSize?.toLowerCase() && s.stock > 0);
       const defaultSizeObj = enriched.sizes.find(s => s.stock > 0) || enriched.sizes[0];
       const defaultSize = matchedSize ? matchedSize.size : defaultSizeObj.size;
@@ -74,12 +67,10 @@ function AppContent() {
     fetchProductData();
   }, [productId]);
 
-  // 4. Update URL Query Parameters on Color/Size state change to keep page deep-linkable
   useEffect(() => {
     if (!product) return;
 
     const params = new URLSearchParams(window.location.search);
-    // Maintain existing productId/id query param
     params.set('productId', productId.toString());
     
     const activeColor = product.colors.find(c => c.id === selectedColorId);
@@ -96,12 +87,10 @@ function AppContent() {
     }
   }, [selectedColorId, selectedSize, product, productId]);
 
-  // Render Skeleton Loader for premium loading state
   if (loading) {
     return (
       <div className="pdp-container skeleton-layout">
         <div className="skeleton-grid">
-          {/* Gallery Skeleton */}
           <div className="skeleton-gallery">
             <div className="skeleton-image pulse-animation" />
             <div className="skeleton-thumbnails">
@@ -110,7 +99,6 @@ function AppContent() {
               ))}
             </div>
           </div>
-          {/* Info Panel Skeleton */}
           <div className="skeleton-info">
             <div className="skeleton-line short pulse-animation" />
             <div className="skeleton-line title pulse-animation" />
@@ -133,7 +121,6 @@ function AppContent() {
     );
   }
 
-  // Render Error State with Retry Button
   if (error) {
     return (
       <div className="pdp-container error-layout">
@@ -154,7 +141,6 @@ function AppContent() {
 
   return (
     <div className="pdp-container">
-      {/* Product Category Breadcrumb */}
       <div className="breadcrumbs">
         <a href="/">Home</a> <span className="breadcrumb-sep">/</span>
         <a href={`#category-${product.category.toLowerCase().replace(/\s+/g, '-')}`}>{product.category}</a> <span className="breadcrumb-sep">/</span>
@@ -162,12 +148,10 @@ function AppContent() {
       </div>
 
       <div className="pdp-grid">
-        {/* Left Column: Image Gallery (55%) */}
         <section className="gallery-section">
           <ImageGallery images={product.images} />
         </section>
 
-        {/* Right Column: Product Details Panel (45%) */}
         <section className="info-section">
           <InfoPanel 
             product={product} 
@@ -179,12 +163,10 @@ function AppContent() {
         </section>
       </div>
 
-      {/* Tabs section below fold (100%) */}
       <section className="details-section">
         <DetailsTabs product={product} />
       </section>
 
-      {/* Quick Demo Navigation for Testing Different Products */}
       <div className="demo-navigation">
         <h4>Explore Other Gear (Demo Products)</h4>
         <div className="demo-links">

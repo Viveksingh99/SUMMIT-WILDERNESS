@@ -21,7 +21,7 @@
   user-select: none;
 
   @media (max-width: $breakpoint-mobile) {
-    display: none; // Hidden on mobile, scrollable container used instead
+    display: none;
   }
 
   .mainImage {
@@ -100,7 +100,6 @@
   }
 }
 
-/* Mobile swipe-gallery stylings */
 .mobileGallery {
   display: none;
   width: 100%;
@@ -108,14 +107,14 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  scrollbar-width: none; // Firefox
+  scrollbar-width: none;
   border-radius: $radius-md;
   border: 1px solid var(--color-border);
   background-color: #ffffff;
   position: relative;
 
   &::-webkit-scrollbar {
-    display: none; // Chrome/Safari
+    display: none;
   }
 
   @media (max-width: $breakpoint-mobile) {
@@ -187,7 +186,6 @@
   }
 }
 
-/* Thumbnail Grid Row */
 .thumbnailRow {
   display: flex;
   gap: 12px;
@@ -197,7 +195,6 @@
 
   @media (max-width: $breakpoint-mobile) {
     padding: 0 4px 4px;
-    // Let thumbnails scroll sideways if they exceed space
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -240,7 +237,6 @@
   }
 }
 
-/* Fullscreen Lightbox Modal */
 .lightbox {
   position: fixed;
   inset: 0;

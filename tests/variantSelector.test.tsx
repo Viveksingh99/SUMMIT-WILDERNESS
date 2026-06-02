@@ -19,9 +19,9 @@ const mockProduct = {
     { id: 'slate-grey', name: 'Slate Grey', hex: '#4b5563' }
   ],
   sizes: [
-    { size: 'S', stock: 15 }, // Available
-    { size: 'M', stock: 2 },  // Low Stock ("Only 2 left")
-    { size: 'L', stock: 0 }   // Sold Out
+    { size: 'S', stock: 15 },
+    { size: 'M', stock: 2 },
+    { size: 'L', stock: 0 }
   ],
   images: ['https://example.com/image.png'],
   reviews: [],
@@ -49,7 +49,6 @@ describe('InfoPanel - Variant Selector Tests', () => {
       </Wrapper>
     );
 
-    // Find the Size L button, it should be disabled because stock is 0
     const sizeLButton = screen.getByRole('radio', { name: /Select size L\. Sold out/i });
     expect(sizeLButton).toBeDisabled();
     expect(sizeLButton).toHaveClass(/soldOutSize/);
@@ -57,7 +56,7 @@ describe('InfoPanel - Variant Selector Tests', () => {
 
   it('disables the Add to Cart CTA button when selected variant is sold out', () => {
     const selectedColorId = 'alpine-green';
-    const selectedSize = 'L'; // Sold out
+    const selectedSize = 'L';
 
     render(
       <Wrapper>
@@ -71,7 +70,6 @@ describe('InfoPanel - Variant Selector Tests', () => {
       </Wrapper>
     );
 
-    // Add to Cart CTA should be disabled and read "Sold Out"
     const ctaButton = screen.getByRole('button', { name: /Sold Out/i });
     expect(ctaButton).toBeDisabled();
   });
@@ -96,22 +94,17 @@ describe('InfoPanel - Variant Selector Tests', () => {
 
     render(<TestComponent />);
 
-    // Select size M (stock = 2)
     const sizeMButton = screen.getByRole('radio', { name: /Select size M\. Low stock/i });
     fireEvent.click(sizeMButton);
 
-    // The quantity picker input should have max set to 2
     const qtyInput = screen.getByRole('spinbutton', { name: /Product quantity input/i }) as HTMLInputElement;
     expect(qtyInput.max).toBe('2');
 
-    // Attempt to increment quantity beyond stock limits
     const plusButton = screen.getByRole('button', { name: /Increase quantity/i });
     
-    // Increment once (quantity becomes 2)
     fireEvent.click(plusButton);
     expect(qtyInput.value).toBe('2');
     
-    // The "+" button should now be disabled since we hit the stock limit cap of 2
     expect(plusButton).toBeDisabled();
   });
 });

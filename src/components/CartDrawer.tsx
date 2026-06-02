@@ -15,7 +15,6 @@ export const CartDrawer: React.FC = () => {
   } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Close drawer on escape key press
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -34,7 +33,6 @@ export const CartDrawer: React.FC = () => {
     };
   }, [isCartOpen, setCartOpen]);
 
-  // Click outside to close drawer
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       setCartOpen(false);

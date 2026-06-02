@@ -7,7 +7,7 @@
   --color-text-secondary: #4b5563;
   --color-text-muted: #9ca3af;
   --color-border: #e5e7eb;
-  --color-accent: #1e3a2f; /* Deep Forest */
+  --color-accent: #1e3a2f;
   --color-accent-hover: #2d5a47;
   --color-accent-bg: rgba(30, 58, 47, 0.05);
   --color-sale: #dc2626;
@@ -24,7 +24,6 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Base Dark Theme (Default premium experience if prefers-color-scheme is dark) */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #0b0d0f;
@@ -33,7 +32,7 @@
     --color-text-secondary: #9ca3af;
     --color-text-muted: #4b5563;
     --color-border: #242830;
-    --color-accent: #4ade80; /* Alpine Green */
+    --color-accent: #4ade80;
     --color-accent-hover: #22c55e;
     --color-accent-bg: rgba(74, 222, 128, 0.08);
     --color-sale: #fb7185;
@@ -42,8 +41,6 @@
   }
 }
 
-/* Force dark theme for that premium outdoors shop feeling, but respect prefers if needed.
-   Let's make our PDP dark-themed by default for classiness. We will support both, but style it elegantly. */
 body {
   margin: 0;
   padding: 0;
@@ -59,7 +56,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom Scrollbar for a premium look */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

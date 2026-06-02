@@ -9,7 +9,7 @@ export interface ColorOption {
 
 export interface SizeOption {
   size: string;
-  stock: number; // 0 = sold out, 1-2 = low stock ("Only X left"), >2 = available
+  stock: number;
 }
 
 export interface Specification {
@@ -43,7 +43,6 @@ export interface EnrichedProduct {
   category: string;
 }
 
-// Lists of premium outdoor attributes for enrichment
 const BRANDS = ['SUMMIT // WILDERNESS', 'Arc\'teryx', 'Patagonia', 'Osprey', 'Black Diamond', 'Mammut'];
 
 const COLORS: ColorOption[] = [
@@ -85,10 +84,8 @@ const REVIEWS: Review[] = [
 export function enrichProduct(apiProduct: any): EnrichedProduct {
   const id = apiProduct.id;
   
-  // 1. Determine Brand
   const brand = BRANDS[id % BRANDS.length];
 
-  // 2. Map Title & Category to premium outdoor gear naming
   let title = apiProduct.title;
   let category = apiProduct.category;
   let specifications: Specification[] = [];
@@ -120,7 +117,6 @@ export function enrichProduct(apiProduct: any): EnrichedProduct {
       { key: 'Warranty', value: 'Limited Lifetime Warranty' }
     ];
   } else {
-    // Electronics/Jewelery mapped to tech tools
     if (category === 'electronics') {
       title = title.replace(/Western Digital|Seagate|SanDisk/g, '').trim();
       title = `Trek-Core GPS Navigation & Alt-Watch`;
@@ -145,54 +141,46 @@ export function enrichProduct(apiProduct: any): EnrichedProduct {
     }
   }
 
-  // 3. Setup pricing (original vs sale price)
-  const onSale = id % 2 !== 0; // Odd IDs are on sale
+  const onSale = id % 2 !== 0;
   const price = apiProduct.price;
   const originalPrice = onSale ? Math.round((price * 1.35) * 100) / 100 : null;
 
-  // 4. Setup color options (limit to 3 for electronics/gear, 4 for apparel)
   const colors = id === 1 || category.includes('Apparel') ? COLORS : COLORS.slice(0, 3);
 
-  // 5. Generate stock levels deterministically based on product ID
-  // Sizes: S, M, L, XL, XXL. We want to show available, low stock (e.g. 2 left), and sold out (0)
   const sizes = STANDARD_SIZES.map((size, index) => {
-    // Deterministic stock pattern based on ID and size index
     const seed = (id * 7 + index * 13) % 10;
-    let stock = 15; // default available
+    let stock = 15;
     if (seed === 1 || seed === 4) {
-      stock = 0; // Sold out
+      stock = 0;
     } else if (seed === 2 || seed === 7) {
-      stock = 2; // Low stock
+      stock = 2;
     } else if (seed === 5) {
-      stock = 1; // Low stock
+      stock = 1;
     }
     return { size, stock };
   });
 
-  // 6. Setup image gallery. For ID 1, we use our generated images.
-  // For others, we generate a gallery by reusing the API image and adding Unsplash outdoor images.
   let images = [apiProduct.image];
 
   if (id === 1) {
     images = [
       backpackMain,
       backpackSide,
-      'https://images.unsplash.com/photo-1551632879-25b2d7a90620?q=80&w=800&auto=format&fit=crop', // Lifestyle hikers
-      'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=800&auto=format&fit=crop'  // Backpack detail on ground
+      'https://images.unsplash.com/photo-1551632879-25b2d7a90620?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=800&auto=format&fit=crop'
     ];
   } else {
-    // Generate related high-quality Unsplash image URLs based on category
     if (category.includes('Apparel')) {
       images = [
         apiProduct.image,
-        'https://images.unsplash.com/photo-1544640808-32ca72ac7f37?q=80&w=800&auto=format&fit=crop', // Apparel close-up
-        'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?q=80&w=800&auto=format&fit=crop'  // Mountain hiker lifestyle
+        'https://images.unsplash.com/photo-1544640808-32ca72ac7f37?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?q=80&w=800&auto=format&fit=crop'
       ];
     } else {
       images = [
         apiProduct.image,
-        'https://images.unsplash.com/photo-1533630988607-c81b29d1a3e7?q=80&w=800&auto=format&fit=crop', // Compass/gear on map
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop'  // Majestic mountain peak
+        'https://images.unsplash.com/photo-1533630988607-c81b29d1a3e7?q=80&w=800&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop'
       ];
     }
   }

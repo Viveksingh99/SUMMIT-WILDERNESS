@@ -26,17 +26,13 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
 
   const selectedColor = product.colors.find(c => c.id === selectedColorId) || product.colors[0];
 
-  // Find the stock level for the currently selected variant combination.
-  // Note: Since size buttons represent the selected color's size stock, we look up dynamically.
   const getStockForSize = (sizeName: string) => {
-    // For simplicity, size stock is computed in the mapper per product.
     const sizeObj = product.sizes.find(s => s.size === sizeName);
     return sizeObj ? sizeObj.stock : 0;
   };
 
   const currentVariantStock = getStockForSize(selectedSize);
 
-  // If selected size changes, ensure quantity is clamped to the new variant's max stock.
   useEffect(() => {
     if (currentVariantStock > 0) {
       setQuantity(prev => Math.min(prev, currentVariantStock));
@@ -50,17 +46,16 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
     setQuantity(clamped);
   };
 
-  // Mock API post request with random failure
   const simulateAddToCartAPI = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const isFailure = Math.random() < 0.2; // 20% random failure rate
+        const isFailure = Math.random() < 0.2;
         if (isFailure) {
           reject(new Error('API Server Timeout: Failed to synchronize cart state.'));
         } else {
           resolve();
         }
-      }, 1000); // 1s network latency simulation
+      }, 1000);
     });
   };
 
@@ -73,7 +68,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
     try {
       await simulateAddToCartAPI();
       
-      // Successfully "posted" to API, now add to client context
       addToCart({
         id: product.id,
         title: product.title,
@@ -99,7 +93,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
     }
   };
 
-  // Clear toast notifications after 5 seconds
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -109,11 +102,9 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
     }
   }, [notification]);
 
-  // Delivery Estimate variables
   const isVariantInStock = currentVariantStock > 0;
   const isVariantLowStock = currentVariantStock > 0 && currentVariantStock <= 2;
 
-  // Render Star Rating
   const renderStars = (rate: number) => {
     const fullStars = Math.floor(rate);
     const hasHalfStar = rate % 1 >= 0.5;
@@ -133,11 +124,9 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
 
   return (
     <div className={styles.panel}>
-      {/* Brand & Title */}
       <span className={styles.brand}>{product.brand}</span>
       <h1 className={styles.title}>{product.title}</h1>
 
-      {/* Ratings */}
       <div className={styles.ratingRow}>
         {renderStars(product.rating.rate)}
         <span className={styles.ratingText}>
@@ -145,7 +134,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         </span>
       </div>
 
-      {/* Prices */}
       <div className={styles.priceRow}>
         <span className={styles.price}>${product.price.toFixed(2)}</span>
         {product.originalPrice && (
@@ -158,7 +146,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
 
       <hr className={styles.divider} />
 
-      {/* Colour swatches */}
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>
           Color: <span className={styles.highlightVal}>{selectedColor.name}</span>
@@ -187,7 +174,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         </div>
       </div>
 
-      {/* Size buttons */}
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>
           Size: <span className={styles.highlightVal}>{selectedSize}</span>
@@ -227,7 +213,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         </div>
       </div>
 
-      {/* Quantity & Add to Cart */}
       <div className={styles.purchaseSection}>
         <div className={styles.qtyContainer}>
           <span className={styles.qtyLabel}>Quantity:</span>
@@ -279,7 +264,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         </button>
       </div>
 
-      {/* API Action Feedback Toast Alerts */}
       {notification && (
         <div 
           className={`${styles.toast} ${notification.type === 'success' ? styles.toastSuccess : styles.toastError}`}
@@ -294,7 +278,6 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
         </div>
       )}
 
-      {/* Conditionally Shown Delivery Estimate Line (Open Question 3) */}
       {isVariantInStock && (
         <div className={styles.deliveryEstimate}>
           <Calendar size={15} />

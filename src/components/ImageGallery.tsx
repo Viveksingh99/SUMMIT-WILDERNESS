@@ -14,7 +14,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
   const mainImageRef = useRef<HTMLDivElement>(null);
   const mobileContainerRef = useRef<HTMLDivElement>(null);
 
-  // Desktop Hover Zoom handler
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const container = mainImageRef.current;
     if (!container) return;
@@ -36,7 +35,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
     });
   };
 
-  // Sync mobile swipe scrolling with activeIndex and dots indicator
   const handleMobileScroll = () => {
     const container = mobileContainerRef.current;
     if (!container) return;
@@ -50,7 +48,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
     }
   };
 
-  // Keep scroll position in sync when activeIndex is changed via thumbnails
   useEffect(() => {
     const container = mobileContainerRef.current;
     if (!container) return;
@@ -76,7 +73,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
     setActiveIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  // Lightbox key listeners
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isLightboxOpen) return;
@@ -91,7 +87,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
 
   return (
     <div className={styles.gallery}>
-      {/* Desktop Main Image Display with Hover Zoom */}
       <div 
         ref={mainImageRef}
         className={styles.mainImageContainer}
@@ -132,7 +127,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
         )}
       </div>
 
-      {/* Mobile Horizontal Scrollable Gallery */}
       <div 
         ref={mobileContainerRef}
         className={styles.mobileGallery}
@@ -149,7 +143,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
         </div>
       </div>
 
-      {/* Dot Position Indicator for Mobile */}
       {images.length > 1 && (
         <div className={styles.dotsIndicator}>
           {images.map((_, idx) => (
@@ -164,7 +157,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
         </div>
       )}
 
-      {/* Thumbnails Row (below main image) */}
       <div className={styles.thumbnailRow}>
         {images.map((img, idx) => (
           <button
@@ -179,7 +171,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
         ))}
       </div>
 
-      {/* Fullscreen Lightbox Overlay */}
       {isLightboxOpen && (
         <div className={styles.lightbox} onClick={() => setLightboxOpen(false)}>
           <button 

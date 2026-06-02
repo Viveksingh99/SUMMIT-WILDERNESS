@@ -32,7 +32,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setCartOpen] = useState(false);
 
-  // Rehydrate cart from localStorage on mount
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -44,7 +43,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // Persist cart to localStorage whenever it changes
   useEffect(() => {
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cart));
@@ -55,7 +53,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (newItem: Omit<CartItem, 'quantity'>, qty: number) => {
     setCart((prevCart) => {
-      // Find if item with same ID, color, and size already exists in the cart
       const existingItemIndex = prevCart.findIndex(
         (item) =>
           item.id === newItem.id &&
@@ -64,7 +61,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       );
 
       if (existingItemIndex > -1) {
-        // If it exists, update the quantity (ensuring it doesn't exceed stock limit)
         const updatedCart = [...prevCart];
         const existingItem = updatedCart[existingItemIndex];
         const newQty = Math.min(existingItem.quantity + qty, newItem.maxStock);
@@ -74,11 +70,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         return updatedCart;
       } else {
-        // If it does not exist, append it with the given quantity
         return [...prevCart, { ...newItem, quantity: Math.min(qty, newItem.maxStock) }];
       }
     });
-    // Open the cart drawer automatically when adding a product for a premium feedback loop
     setCartOpen(true);
   };
 
@@ -111,7 +105,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCart([]);
   };
 
-  // Derive cart counts and subtotals
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const cartSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 

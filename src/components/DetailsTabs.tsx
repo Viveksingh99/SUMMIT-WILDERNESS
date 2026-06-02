@@ -29,7 +29,6 @@ export const DetailsTabs: React.FC<DetailsTabsProps> = ({ product }) => {
 
   return (
     <div className={styles.detailsContainer}>
-      {/* Tab Buttons */}
       <div className={styles.tabHeaders} role="tablist" aria-label="Product details sections">
         <button
           type="button"
@@ -71,9 +70,7 @@ export const DetailsTabs: React.FC<DetailsTabsProps> = ({ product }) => {
         </button>
       </div>
 
-      {/* Tab Content Panels */}
       <div className={styles.tabPanels}>
-        {/* Description Panel */}
         {activeTab === 'description' && (
           <div 
             id="panel-description"
@@ -96,7 +93,6 @@ export const DetailsTabs: React.FC<DetailsTabsProps> = ({ product }) => {
           </div>
         )}
 
-        {/* Specifications Panel */}
         {activeTab === 'specifications' && (
           <div 
             id="panel-specifications"
@@ -125,7 +121,6 @@ export const DetailsTabs: React.FC<DetailsTabsProps> = ({ product }) => {
           </div>
         )}
 
-        {/* Reviews Panel */}
         {activeTab === 'reviews' && (
           <div 
             id="panel-reviews"
